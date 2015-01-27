@@ -9,6 +9,11 @@ import java.util.Random;
  */
 public class WeatherPublisher {
 
+    public static void main(String[] args) {
+        WeatherPublisherUI.launch(args);
+    }
+
+    /*
     public static void main (String[] args) throws Exception {
 // Prepare our context and publisher
         ZMQ.Context context = ZMQ.context(1);
@@ -35,4 +40,5 @@ public class WeatherPublisher {
         context.term ();
     }
 
+*/
 }
