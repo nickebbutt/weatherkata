@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by GA2EBBU on 27/01/2015.
@@ -119,7 +118,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
                 "Requires:\n" +
                 "Temperature = 18\n" +
                 "Wind Strength = 0\n" +
-                "Precipitation = None");
+                "Precipitation = Fish");
     }
 
     private Node getVehicleLabel(String label, String description) {

@@ -1,9 +1,6 @@
 package com.od.weatherkata.client;
 
 import rx.Observable;
-import rx.functions.Func2;
-
-import java.util.function.BiFunction;
 
 /**
  * Created by GA2EBBU on 27/01/2015.
@@ -22,6 +19,15 @@ public class WeatherSubscriber {
         connectStatusPanel(uiControl);
         enableSnowMobile(uiControl);
         enableBalloon(uiControl);
+        enableTrain(uiControl);
+    }
+
+    private void enableTrain(WeatherSubscriberControl uiControl) {
+        Observable<Boolean> isFish = precipitation.map("Fish"::equals);
+        Observable<Boolean> is18 = temperature.map(Integer.valueOf(18)::equals);
+        Observable<Boolean> isNoWind = windStrength.map(Integer.valueOf(0)::equals);
+        Observable<Boolean> canCommute = Observable.combineLatest(isFish, isNoWind, is18, (f, w, t) -> f && w && t);
+        canCommute.distinctUntilChanged().subscribe(uiControl::setTrainEnabled);
     }
 
     private void connectStatusPanel(WeatherSubscriberControl uiControl) {
@@ -31,13 +37,13 @@ public class WeatherSubscriber {
     }
 
     private void enableSnowMobile(WeatherSubscriberControl uiControl) {
-        temperature.map(i -> i <= 0).distinctUntilChanged().forEach(uiControl::setSnowMobileEnabled);
+        temperature.map(i -> i <= 0).distinctUntilChanged().subscribe(uiControl::setSnowMobileEnabled);
     }
 
     private void enableBalloon(WeatherSubscriberControl uiControl) {
         Observable<Boolean> isFish = precipitation.map("Fish"::equals);
         Observable<Boolean> shouldFly = Observable.combineLatest(isFish, windStrength, (f, w) -> w < 5 && ! f);
-        shouldFly.distinctUntilChanged().forEach(uiControl::setBalloonEnabled);
+        shouldFly.distinctUntilChanged().subscribe(uiControl::setBalloonEnabled);
     }
 
     public void subscribe() {
