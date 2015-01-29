@@ -20,6 +20,9 @@ public class WeatherSubscriber {
         temperature.subscribe(uiControl::setTemperature);
         windStrength.subscribe(uiControl::setWindStrength);
         precipitation.subscribe(uiControl::setPrecipitation);
+
+        temperature.map(i -> i <= 0).distinctUntilChanged().subscribe(uiControl::setSnowMobileEnabled);
+
     }
 
     public void subscribe() {

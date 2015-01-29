@@ -5,6 +5,11 @@ import javafx.animation.FadeTransition;
 import javafx.animation.FillTransition;
 import javafx.animation.Transition;
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableBooleanValue;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,6 +31,13 @@ public class WeatherSubscriberUI extends Application implements UiControl {
     private final Label windStrengthLabel = new Label();
     private Stage primaryStage;
     private WeatherSubscriber weatherSubscriber;
+    private ImageView snowMobile;
+    private ImageView balloon;
+    private ImageView train;
+
+    private BooleanProperty snowMobileEnabled = new SimpleBooleanProperty(false);
+    private BooleanProperty balloonEnabled = new SimpleBooleanProperty(false);
+    private BooleanProperty trainEnabled = new SimpleBooleanProperty(false);
 
     public void init() throws Exception {
         weatherSubscriber = new WeatherSubscriber(this);
@@ -52,9 +64,9 @@ public class WeatherSubscriberUI extends Application implements UiControl {
         VBox vBox = new VBox();
 
         Pane infoPane = createInfoPane();
-        ImageView snowMobile = createImage("Snowmobile.png");
-        ImageView balloon = createImage("Balloon.png");
-        ImageView train = createImage("Train.png");
+        snowMobile = createImage("Snowmobile.png", snowMobileEnabled);
+        balloon = createImage("Balloon.png", balloonEnabled);
+        train = createImage("Train.png", trainEnabled);
 
         //https://gist.github.com/jewelsea/1962045
 
@@ -92,7 +104,7 @@ public class WeatherSubscriberUI extends Application implements UiControl {
         return getVehicleLabel(
                 "Snow Mobile:",
                 "Requires:\n" +
-                "Temperature < 0");
+                "Temperature <= 0");
     }
 
     private Node getBalloonLabel() {
@@ -141,11 +153,21 @@ public class WeatherSubscriberUI extends Application implements UiControl {
         return box;
     }
 
-    private ImageView createImage(String url) {
+    private ImageView createImage(String url, BooleanProperty booleanProperty) {
         Image image = new Image(url);
         ImageView imageView = new ImageView(image);
         imageView.setPreserveRatio(true);
         imageView.setFitWidth(150);
+        imageView.setOpacity(0.3);
+
+        booleanProperty.addListener((observable, oldValue, newValue) -> {
+            FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), imageView);
+            fadeTransition.setFromValue(newValue ? 0.3 : 1);
+            fadeTransition.setToValue(newValue ? 1 : 0.3);
+            fadeTransition.setAutoReverse(false);
+            fadeTransition.setCycleCount(1);
+            fadeTransition.play();
+        });
         return imageView;
     }
 
@@ -185,11 +207,26 @@ public class WeatherSubscriberUI extends Application implements UiControl {
 
     private void blink(Node n) {
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(100), n);
-        fadeTransition.setFromValue(0);
+        fadeTransition.setFromValue(0.3);
         fadeTransition.setToValue(1);
         fadeTransition.setAutoReverse(true);
         fadeTransition.setCycleCount(1);
         fadeTransition.play();
+    }
+
+    public void setSnowMobileEnabled(boolean enabled) {
+        System.out.println("Enabling snow mobile " + enabled);
+        snowMobileEnabled.setValue(enabled);
+    }
+
+    public void setBalloonEnabled(boolean enabled) {
+        System.out.println("Enabling balloon " + enabled);
+        balloonEnabled.setValue(enabled);
+    }
+
+    public void setTrainEnabled(boolean enabled) {
+        System.out.println("Enabling train " + enabled);
+        trainEnabled.setValue(enabled);
     }
 
     public static void main(String[] args) throws Exception {

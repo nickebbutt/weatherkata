@@ -34,7 +34,7 @@ public class SocketSubscriber {
                 subscriber.subscribe("precipitation".getBytes());
                 System.out.println("Subscribed to all messages");
 
-                Pattern p = Pattern.compile("(.+):\\{(\\w+)\\}");
+                Pattern p = Pattern.compile("(.+):\\{([-\\w]+)\\}");
 
 // Process 100 updates
                 while(true) {
