@@ -33,6 +33,7 @@ public class WeatherPublisherUI extends Application {
         primaryStage.setWidth(400);
         primaryStage.setHeight(300);
         primaryStage.setTitle("Weather Publisher");
+        primaryStage.setOnCloseRequest((w) -> {System.exit(0);});
         primaryStage.show();
     }
 

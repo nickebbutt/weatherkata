@@ -1,36 +1,28 @@
 package com.od.weatherkata.client;
 
-import org.zeromq.ZMQ;
+import rx.Observable;
 
 /**
  * Created by GA2EBBU on 27/01/2015.
  */
 public class WeatherSubscriber {
 
-    public static void main (String[] args) {
-        final ZMQ.Context context = ZMQ.context(1);
+    private UiControl uiControl;
+    private SocketSubscriber socketSubscriber = new SocketSubscriber();
 
-// Socket to talk to server
-        System.out.println("Collecting updates from weather server");
-        final ZMQ.Socket subscriber = context.socket(ZMQ.SUB);
-        subscriber.connect("tcp://localhost:5556");
+    private Observable<String> precipitation = socketSubscriber.getPrecipitationObservable();
+    private Observable<Integer> temperature = socketSubscriber.getTemperatureObservable();
+    private Observable<Integer> windStrength = socketSubscriber.getWindStrengthObservable();
 
-        subscriber.subscribe("temp".getBytes());
-        subscriber.subscribe("wind".getBytes());
-        subscriber.subscribe("precipitation".getBytes());
-        System.out.println("Subscribed to all messages");
+    public WeatherSubscriber(UiControl uiControl) {
+        this.uiControl = uiControl;
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            subscriber.close();
-            context.term();
-        }));
+        temperature.subscribe(uiControl::setTemperature);
+        windStrength.subscribe(uiControl::setWindStrength);
+        precipitation.subscribe(uiControl::setPrecipitation);
+    }
 
-// Process 100 updates
-        while(true) {
-// Use trim to remove the tailing '0' character
-            String string = subscriber.recvStr(0).trim();
-            System.out.println(string);
-        }
-
+    public void subscribe() {
+        socketSubscriber.subscribe();
     }
 }
