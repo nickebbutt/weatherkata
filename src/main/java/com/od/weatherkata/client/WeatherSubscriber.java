@@ -19,17 +19,25 @@ public class WeatherSubscriber {
 
     public WeatherSubscriber(WeatherSubscriberControl uiControl) {
         this.uiControl = uiControl;
+        connectStatusPanel(uiControl);
+        enableSnowMobile(uiControl);
+        enableBalloon(uiControl);
+    }
 
-        temperature.subscribe(uiControl::setTemperature);
-        windStrength.subscribe(uiControl::setWindStrength);
-        precipitation.subscribe(uiControl::setPrecipitation);
+    private void connectStatusPanel(WeatherSubscriberControl uiControl) {
+        temperature.distinctUntilChanged().subscribe(uiControl::setTemperature);
+        windStrength.distinctUntilChanged().subscribe(uiControl::setWindStrength);
+        precipitation.distinctUntilChanged().subscribe(uiControl::setPrecipitation);
+    }
 
-        temperature.map(i -> i <= 0).distinctUntilChanged().subscribe(uiControl::setSnowMobileEnabled);
+    private void enableSnowMobile(WeatherSubscriberControl uiControl) {
+        temperature.map(i -> i <= 0).distinctUntilChanged().forEach(uiControl::setSnowMobileEnabled);
+    }
 
+    private void enableBalloon(WeatherSubscriberControl uiControl) {
         Observable<Boolean> isFish = precipitation.map("Fish"::equals);
         Observable<Boolean> shouldFly = Observable.combineLatest(isFish, windStrength, (f, w) -> w < 5 && ! f);
-        shouldFly.distinctUntilChanged().subscribe(uiControl::setBalloonEnabled);
-
+        shouldFly.distinctUntilChanged().forEach(uiControl::setBalloonEnabled);
     }
 
     public void subscribe() {
