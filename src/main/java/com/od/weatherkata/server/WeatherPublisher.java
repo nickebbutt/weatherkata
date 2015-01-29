@@ -2,43 +2,38 @@ package com.od.weatherkata.server;
 
 import org.zeromq.ZMQ;
 
-import java.util.Random;
-
 /**
  * Created by GA2EBBU on 27/01/2015.
  */
 public class WeatherPublisher {
 
-    public static void main(String[] args) {
-        WeatherPublisherUI.launch(args);
-    }
 
-    /*
-    public static void main (String[] args) throws Exception {
-// Prepare our context and publisher
+    private final ZMQ.Socket publisher;
+
+    public WeatherPublisher() throws Exception {
         ZMQ.Context context = ZMQ.context(1);
 
-        ZMQ.Socket publisher = context.socket(ZMQ.PUB);
+        publisher = context.socket(ZMQ.PUB);
         publisher.bind("tcp://*:5556");
         publisher.bind("ipc://weather");
 
-// Initialize random number generator
-        Random srandom = new Random(System.currentTimeMillis());
-        while (!Thread.currentThread ().isInterrupted ()) {
-// Get values that will fool the boss
-            int zipcode, temperature, relhumidity;
-            zipcode = 10000 + srandom.nextInt(10000) ;
-            temperature = srandom.nextInt(215) - 80 + 1;
-            relhumidity = srandom.nextInt(50) + 10 + 1;
-
-// Send message to all subscribers
-            String update = String.format("%05d %d %d", zipcode, temperature, relhumidity);
-            publisher.send(update, 0);
-        }
-
-        publisher.close ();
-        context.term ();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("Shutting down publisher");
+            publisher.close();
+            context.term ();})
+        );
     }
 
-*/
+    public void sendTemperature(int temp) {
+        publisher.send("temp:{" + temp + "}", 0);
+    }
+
+    public void sendWindStrength (int windStrength) {
+        publisher.send("wind:{" + windStrength + "}", 0);
+    }
+
+    public void sendPrecipitation(String precipitation) {
+        publisher.send("precipitation:{" + precipitation + "}", 0);
+    }
+
 }

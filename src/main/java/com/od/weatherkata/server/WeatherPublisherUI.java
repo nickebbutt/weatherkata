@@ -18,6 +18,11 @@ import javafx.stage.Stage;
 public class WeatherPublisherUI extends Application {
 
     private Stage primaryStage;
+    private WeatherPublisher publisher;
+
+    public void init() throws Exception {
+        publisher = new WeatherPublisher();
+    }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -44,6 +49,9 @@ public class WeatherPublisherUI extends Application {
         tempSlider.setShowTickMarks(true);
         tempSlider.setBlockIncrement(1);
         tempSlider.setSnapToTicks(true);
+        tempSlider.valueProperty().addListener( (v, o, n) -> {
+            publisher.sendTemperature(n.intValue()) ;}
+        );
 
         Region spacer1 = new Region();
         spacer1.setPrefHeight(30);
@@ -57,17 +65,23 @@ public class WeatherPublisherUI extends Application {
                 "Fish"   //http://www.bbc.co.uk/news/world-asia-27298939
             );
         final ComboBox<String> precipitationCombo = new ComboBox<>(options);
+        precipitationCombo.valueProperty().addListener( (v, o, n) -> {
+            publisher.sendPrecipitation(n);
+        });
 
         Region spacer2 = new Region();
         spacer2.setPrefHeight(30);
 
-        Slider windForce = new Slider(0, 10, 1);
-        windForce.setShowTickLabels(true);
-        windForce.setMajorTickUnit(1);
-        windForce.setMinorTickCount(0);
-        windForce.setShowTickMarks(true);
-        windForce.setBlockIncrement(1);
-        windForce.setSnapToTicks(true);
+        Slider windStrengthSlider = new Slider(0, 10, 1);
+        windStrengthSlider.setShowTickLabels(true);
+        windStrengthSlider.setMajorTickUnit(1);
+        windStrengthSlider.setMinorTickCount(0);
+        windStrengthSlider.setShowTickMarks(true);
+        windStrengthSlider.setBlockIncrement(1);
+        windStrengthSlider.setSnapToTicks(true);
+        windStrengthSlider.valueProperty().addListener( (v, o, n) -> {
+            publisher.sendWindStrength(n.intValue()); ;}
+        );
 
 
         Region spacerTop = new Region();
@@ -82,7 +96,7 @@ public class WeatherPublisherUI extends Application {
                 spacer1,
                 getLabeledComponent("Precipitation:", precipitationCombo),
                 spacer2,
-                getLabeledComponent("Wind Strength:", windForce),
+                getLabeledComponent("Wind Strength:", windStrengthSlider),
                 spacerBottom
         );
 
@@ -110,7 +124,7 @@ public class WeatherPublisherUI extends Application {
         return hBox;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         WeatherPublisherUI.launch(args);
     }
 }
