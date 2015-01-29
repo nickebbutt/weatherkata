@@ -1,6 +1,7 @@
 package com.od.weatherkata.server;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -15,13 +16,17 @@ import javafx.stage.Stage;
 /**
  * Created by GA2EBBU on 27/01/2015.
  */
-public class WeatherPublisherUI extends Application {
+public class WeatherPublisherUI extends Application implements WeatherPublisherControl {
 
     private Stage primaryStage;
     private WeatherPublisher publisher;
+    private Slider tempSlider;
+    private Slider windStrengthSlider;
+    private ComboBox<String> precipitationCombo;
 
     public void init() throws Exception {
         publisher = new WeatherPublisher();
+        WeatherPublisherChorusHandler.exportChorusHandler(this);
     }
 
     @Override
@@ -43,7 +48,7 @@ public class WeatherPublisherUI extends Application {
 
         //https://gist.github.com/jewelsea/1962045
 
-        Slider tempSlider = new Slider(-20, 50, 0);
+        tempSlider = new Slider(-20, 50, 0);
         tempSlider.setShowTickLabels(true);
         tempSlider.setMajorTickUnit(10);
         tempSlider.setMinorTickCount(1);
@@ -65,23 +70,25 @@ public class WeatherPublisherUI extends Application {
                 "Hail",
                 "Fish"   //http://www.bbc.co.uk/news/world-asia-27298939
             );
-        final ComboBox<String> precipitationCombo = new ComboBox<>(options);
-        precipitationCombo.valueProperty().addListener( (v, o, n) -> {
+        precipitationCombo = new ComboBox<>();
+        precipitationCombo.setItems(options);
+        precipitationCombo.valueProperty().addListener((v, o, n) -> {
             publisher.sendPrecipitation(n);
         });
 
         Region spacer2 = new Region();
         spacer2.setPrefHeight(30);
 
-        Slider windStrengthSlider = new Slider(0, 10, 0);
+        windStrengthSlider = new Slider(0, 10, 0);
         windStrengthSlider.setShowTickLabels(true);
         windStrengthSlider.setMajorTickUnit(1);
         windStrengthSlider.setMinorTickCount(0);
         windStrengthSlider.setShowTickMarks(true);
         windStrengthSlider.setBlockIncrement(1);
         windStrengthSlider.setSnapToTicks(true);
-        windStrengthSlider.valueProperty().addListener( (v, o, n) -> {
-            publisher.sendWindStrength(n.intValue());}
+        windStrengthSlider.valueProperty().addListener((v, o, n) -> {
+                    publisher.sendWindStrength(n.intValue());
+                }
         );
 
 
@@ -101,6 +108,18 @@ public class WeatherPublisherUI extends Application {
                 spacerBottom
         );
         return vBox;
+    }
+
+    public void setTemperature(int temp) {
+        Platform.runLater( () -> { tempSlider.setValue(temp);});
+    }
+
+    public void setWind(int wind) {
+        Platform.runLater( () -> { windStrengthSlider.setValue(wind);});
+    }
+
+    public void setPrecipitation(String precipitation) {
+        Platform.runLater( () -> { precipitationCombo.setValue(precipitation);});
     }
 
     private Parent getLabeledComponent(String labelText, Control control) {

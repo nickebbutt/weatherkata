@@ -2,8 +2,6 @@ package com.od.weatherkata.client;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,10 +12,13 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Created by GA2EBBU on 27/01/2015.
  */
-public class WeatherSubscriberUI extends Application implements UiControl {
+public class WeatherSubscriberUI extends Application implements WeatherSubscriberControl {
 
     private final Label tempLabel = new Label();
     private final Label precipitationLabel = new Label();
@@ -27,9 +28,19 @@ public class WeatherSubscriberUI extends Application implements UiControl {
     private ImageView balloon;
     private ImageView train;
 
+    private AtomicBoolean trainEnabled = new AtomicBoolean(false);
+    private AtomicBoolean balloonEnabled = new AtomicBoolean(false);
+    private AtomicBoolean snowMobileEnabled = new AtomicBoolean(false);
+
+    private volatile int tempVal;
+    private volatile int windVal;
+    private volatile String precipitationVal;
+
+
     public void init() throws Exception {
         weatherSubscriber = new WeatherSubscriber(this);
         weatherSubscriber.subscribe();
+        WeatherSubscriberChorusHandler.exportChorusHandler(this);
     }
 
     @Override
@@ -178,18 +189,36 @@ public class WeatherSubscriberUI extends Application implements UiControl {
     public void setTemperature(int temperature) {
         tempLabel.setText(temperature + "%");
         blink(tempLabel);
+        tempVal = temperature;
     }
 
     @Override
-    public void setWindStrength(int force) {
-        windStrengthLabel.setText(String.valueOf(force));
+    public int getTemperature() {
+        return tempVal;
+    }
+
+    @Override
+    public void setWindStrength(int windStrength) {
+        windStrengthLabel.setText(String.valueOf(windStrength));
         blink(windStrengthLabel);
+        windVal = windStrength;
+    }
+
+    @Override
+    public int getWindStrength() {
+        return windVal;
     }
 
     @Override
     public void setPrecipitation(String precipitation) {
         precipitationLabel.setText(precipitation);
         blink(precipitationLabel);
+        precipitationVal = precipitation;
+    }
+
+    @Override
+    public String getPrecipitation() {
+        return precipitationVal;
     }
 
     private void blink(Node n) {
@@ -203,17 +232,35 @@ public class WeatherSubscriberUI extends Application implements UiControl {
 
     public void setSnowMobileEnabled(boolean enabled) {
         System.out.println("Enabling snow mobile " + enabled);
+        snowMobileEnabled.set(enabled);
         showVehicle(snowMobile, enabled);
     }
 
     public void setBalloonEnabled(boolean enabled) {
         System.out.println("Enabling balloon " + enabled);
+        balloonEnabled.set(enabled);
         showVehicle(balloon, enabled);
     }
 
     public void setTrainEnabled(boolean enabled) {
         System.out.println("Enabling train " + enabled);
+        trainEnabled.set(enabled);
         showVehicle(train, enabled);
+    }
+
+    @Override
+    public boolean isSnowMobileEnabled() {
+        return snowMobileEnabled.get();
+    }
+
+    @Override
+    public boolean isBalloonEnabled() {
+        return balloonEnabled.get();
+    }
+
+    @Override
+    public boolean isTrainEnabled() {
+        return trainEnabled.get();
     }
 
     public static void main(String[] args) throws Exception {
