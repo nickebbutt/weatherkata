@@ -43,13 +43,13 @@ public class WeatherPublisherUI extends Application {
 
         //https://gist.github.com/jewelsea/1962045
 
-        Slider tempSlider = new Slider(-20, 50, 0.5);
+        Slider tempSlider = new Slider(-20, 50, 0);
         tempSlider.setShowTickLabels(true);
         tempSlider.setMajorTickUnit(10);
-        tempSlider.setMinorTickCount(10);
+        tempSlider.setMinorTickCount(1);
         tempSlider.setShowTickMarks(true);
         tempSlider.setBlockIncrement(1);
-        tempSlider.setSnapToTicks(true);
+        tempSlider.setSnapToTicks(false);
         tempSlider.valueProperty().addListener( (v, o, n) -> {
             publisher.sendTemperature(n.intValue()) ;}
         );
@@ -73,7 +73,7 @@ public class WeatherPublisherUI extends Application {
         Region spacer2 = new Region();
         spacer2.setPrefHeight(30);
 
-        Slider windStrengthSlider = new Slider(0, 10, 1);
+        Slider windStrengthSlider = new Slider(0, 10, 0);
         windStrengthSlider.setShowTickLabels(true);
         windStrengthSlider.setMajorTickUnit(1);
         windStrengthSlider.setMinorTickCount(0);
@@ -81,7 +81,7 @@ public class WeatherPublisherUI extends Application {
         windStrengthSlider.setBlockIncrement(1);
         windStrengthSlider.setSnapToTicks(true);
         windStrengthSlider.valueProperty().addListener( (v, o, n) -> {
-            publisher.sendWindStrength(n.intValue()); ;}
+            publisher.sendWindStrength(n.intValue());}
         );
 
 
@@ -100,9 +100,6 @@ public class WeatherPublisherUI extends Application {
                 getLabeledComponent("Wind Strength:", windStrengthSlider),
                 spacerBottom
         );
-
-//        BorderPane borderPane = new BorderPane();
-//        borderPane.setCenter(vBox);
         return vBox;
     }
 
