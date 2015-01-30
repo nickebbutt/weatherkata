@@ -1,11 +1,9 @@
   Uses: Remoting
 
-    Feature: I can travel by Thameslink trains
-
-      Feature-Start:
+    Feature: I can't travel by Thameslink trains
 
       #! Remoting use pub, sub
-      Scenario: I can commute by Thameslink when it's raining fish and the temperature and wind conditions are ideal
+      Scenario: I can commute by Thameslink when ideal temp with no wind and raining fish
         Given I set temp, wind and precipitation to 18, 0, Fish
         Then I can travel by train
 

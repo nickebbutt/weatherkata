@@ -2,8 +2,6 @@
 
     Feature: I can travel by balloon
 
-      Feature-Start:
-
       #! Remoting use pub, sub
       Scenario: I can fly by balloon when wind is less than five and precipitation not fish
         Given I set temp, wind and precipitation to 0, 4, None

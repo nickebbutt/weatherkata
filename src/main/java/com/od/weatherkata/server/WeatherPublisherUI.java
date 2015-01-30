@@ -21,6 +21,8 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
     private ComboBox<String> precipitationCombo;
     private Slider lowPressure;
     private Slider highPressure;
+    private Button sendButton;
+    private TabPane tabPane;
 
     public void init() throws Exception {
         publisher = new WeatherPublisher();
@@ -106,11 +108,11 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
 
         Pane pressureBox = createPressureBox();
 
-        TabPane tabPane = new TabPane();
+        tabPane = new TabPane();
 
-        Tab transport = new Tab("Weather");
-        transport.setContent(vBox);
-        tabPane.getTabs().add(transport);
+        Tab weatherTab = new Tab("Weather");
+        weatherTab.setContent(vBox);
+        tabPane.getTabs().add(weatherTab);
 
         Tab pressureTab = new Tab("Atmospheric Pressure");
         pressureTab.setContent(pressureBox);
@@ -140,14 +142,12 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
         Region s2 = createVerticalGlue();
         Region s3 = createVerticalGlue();
 
-        Button sendButton = new Button("Send");
+        sendButton = new Button("Send");
 
         HBox buttonBox = new HBox();
         Region r = getHorizontalGlue();
         buttonBox.getChildren().addAll(r, sendButton);
-        sendButton.setOnAction(e -> {
-            publisher.sendPressure((int)lowPressure.getValue(), (int)highPressure.getValue());}
-        );
+        sendButton.setOnAction(e -> { sendPressure(); });
         buttonBox.getStyleClass().add("sendButton");
 
         VBox vbox = new VBox();
@@ -160,6 +160,13 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
         vbox.getChildren().add(s3);
         vbox.getChildren().add(buttonBox);
         return vbox;
+    }
+
+    private void sendPressure() {
+        publisher.sendPressure(
+            (int) lowPressure.getValue(),
+            (int) highPressure.getValue()
+        );
     }
 
     private Region getHorizontalGlue() {
@@ -194,17 +201,37 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
     }
 
     public void setTemperature(int temp) {
-        Platform.runLater( () -> { tempSlider.setValue(temp);});
+        Platform.runLater( () -> {
+            tabPane.getSelectionModel().select(0);
+            tempSlider.setValue(temp);});
     }
 
     public void setWind(int wind) {
         Platform.runLater(() -> {
+            tabPane.getSelectionModel().select(0);
             windStrengthSlider.setValue(wind);
         });
     }
 
     public void setPrecipitation(String precipitation) {
-        Platform.runLater( () -> { precipitationCombo.setValue(precipitation);});
+        Platform.runLater( () -> {
+            tabPane.getSelectionModel().select(0);
+            precipitationCombo.setValue(precipitation);});
+    }
+
+    public void setPressure(int low, int high) {
+        Platform.runLater( () -> {
+            tabPane.getSelectionModel().select(1);
+            if ( low < highPressure.getValue()) {
+                lowPressure.setValue(low);
+                highPressure.setValue(high);
+            } else {
+                highPressure.setValue(high);
+                lowPressure.setValue(low);
+            }
+
+            sendPressure();
+        });
     }
 
     private Parent getLabeledComponent(String labelText, Control control) {

@@ -13,4 +13,6 @@ public interface WeatherPublisherControl {
     void setWind(int wind);
 
     void setPrecipitation(String precipitation);
+
+    void setPressure(int low, int high);
 }

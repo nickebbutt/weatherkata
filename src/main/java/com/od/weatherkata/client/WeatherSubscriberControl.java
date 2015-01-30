@@ -1,5 +1,7 @@
 package com.od.weatherkata.client;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by GA2EBBU on 29/01/2015.
  */
@@ -29,9 +31,21 @@ public interface WeatherSubscriberControl {
 
     boolean isTrainEnabled();
 
-    void setPressureDifference(int difference);
+    public void setLowPressure(int lowPressure);
+
+    public void setHighPressure(int highPressure);
+
+    public void setPressureDifference(int highPressure);
 
     int getPressureDifference();
 
     int getLastPressureDifference();
+
+    int getHighPressure();
+
+    int getLowPressure();
+
+    void showPressureTab();
+
+    void showWeatherTab();
 }

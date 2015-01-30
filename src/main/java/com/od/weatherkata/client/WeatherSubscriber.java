@@ -24,7 +24,13 @@ public class WeatherSubscriber {
         connectSnowMobile(uiControl);
         connectBalloon(uiControl);
         connectTrain(uiControl);
+        connectPressure(uiControl);
         connectPressureDifference(uiControl);
+    }
+
+    private void connectPressure(WeatherSubscriberControl uiControl) {
+        pressureLow.subscribe(uiControl::setLowPressure);
+        pressureHigh.subscribe(uiControl::setHighPressure);
     }
 
     private void connectPressureDifference(WeatherSubscriberControl uiControl) {

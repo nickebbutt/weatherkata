@@ -28,10 +28,27 @@ public class WeatherSubscriberChorusHandler {
     @Step("I (can|can't) travel by (train|balloon|snowmobile)")
     @PassesWithin(length=2)
     public void checkCanTravel(String canOrCant, String transport) {
+        uiControl.showWeatherTab();
         checkExpectedValuesSet();
         boolean expected = "can".equals(canOrCant);
         Supplier<Boolean> checker = getChecker(transport);
         assertEquals(expected, checker.get());
+    }
+
+    @Step("the pressure difference is (\\d+)")
+    @PassesWithin(length=2)
+    public void checkPressure(int pressureDiff) {
+        uiControl.showPressureTab();
+        checkExpectedValuesSet();
+        assertEquals(pressureDiff, uiControl.getPressureDifference());
+    }
+
+    @Step("the last pressure difference is (\\d+)")
+    @PassesWithin(length=2)
+    public void checkLastPressure(int lastPressureDiff) {
+        uiControl.showPressureTab();
+        checkExpectedValuesSet();
+        assertEquals(lastPressureDiff, uiControl.getLastPressureDifference());
     }
 
     private Supplier<Boolean> getChecker(String transport) {
@@ -56,6 +73,14 @@ public class WeatherSubscriberChorusHandler {
 
         if ( map.containsKey("precipitation")) {
             assertEquals((String)map.get("precipitation"), uiControl.getPrecipitation() );
+        }
+
+        if ( map.containsKey("lowPressure")) {
+            assertEquals((Integer)map.get("lowPressure"), (Integer)uiControl.getLowPressure() );
+        }
+
+        if ( map.containsKey("highPressure")) {
+            assertEquals((Integer)map.get("highPressure"), (Integer)uiControl.getHighPressure() );
         }
     }
 

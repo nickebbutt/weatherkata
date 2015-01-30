@@ -2,6 +2,7 @@ package com.od.weatherkata.client;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,9 +27,12 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     private final Label precipitationLabel = new Label();
     private final Label windStrengthLabel = new Label();
 
-    private final Label pressureLabel = new Label("000");
-    private final Label pressureLabel2 = new Label();
-    private final Label pressureLabel3 = new Label();
+    private final Label lowPressureLabel = new Label();
+    private final Label highPressureLabel = new Label();
+
+    private final Label pressureDiffLabel = new Label();
+    private final Label pressureDifLabel2 = new Label();
+    private final Label pressureDifLabel3 = new Label();
 
     private WeatherSubscriber weatherSubscriber;
     private ImageView snowMobile;
@@ -44,6 +48,9 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     private volatile String precipitationVal;
     private volatile int lastPressureDifference;
     private volatile int pressureDifference;
+    private volatile int highPressure;
+    private volatile int lowPressure;
+    private TabPane tabPane;
 
     public void init() throws Exception {
         weatherSubscriber = new WeatherSubscriber(this);
@@ -103,7 +110,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
         vBox.getStyleClass().add("bordered-panel");
 
-        TabPane tabPane = new TabPane();
+        tabPane = new TabPane();
         Tab transport = new Tab("Weather");
         transport.setContent(vBox);
         tabPane.getTabs().add(transport);
@@ -182,12 +189,23 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         Label label1 = new Label("Pressure Difference:");
         Label label3 = new Label();
         Label label2 = new Label();
-        setPreferredWidth(220, label1, label2, label3);
 
-        box.getChildren().add(getLabeledComponent(label1, pressureLabel, "pressureLabel1"));
-        box.getChildren().add(getLabeledComponent(label2, pressureLabel2, "pressureLabel2"));
-        box.getChildren().add(getLabeledComponent(label3, pressureLabel3, "pressureLabel3"));
+        Label lowPres = new Label("Low Pressure");
+        Label highPres = new Label("High Pressure");
+        setPreferredWidth(220, label1, label2, label3);
+        box.getChildren().add(getLabeledComponent(lowPres, lowPressureLabel, "pressureLabel"));
+        box.getChildren().add(getLabeledComponent(highPres, highPressureLabel, "pressureLabel"));
+        box.getChildren().add(getVerticalSpace(30));
+        box.getChildren().add(getLabeledComponent(label1, pressureDiffLabel, "pressureLabel1"));
+        box.getChildren().add(getLabeledComponent(label2, pressureDifLabel2, "pressureLabel2"));
+        box.getChildren().add(getLabeledComponent(label3, pressureDifLabel3, "pressureLabel3"));
         return box;
+    }
+
+    private Node getVerticalSpace(int i) {
+        Region region = new Region();
+        region.setPrefHeight(i);
+        return region;
     }
 
     private void setPreferredWidth(int i, Label... l) {
@@ -293,12 +311,24 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         showVehicle(train, enabled);
     }
 
+    public void setLowPressure(int lowPressure) {
+        System.out.println("Setting low pressure " + lowPressure);
+        lowPressureLabel.setText(new DecimalFormat("000").format(lowPressure));
+        this.lowPressure = lowPressure;
+    }
+
+    public void setHighPressure(int highPressure) {
+        System.out.println("Setting low pressure " + highPressure);
+        highPressureLabel.setText(new DecimalFormat("000").format(highPressure));
+        this.highPressure = highPressure;
+    }
+
     public void setPressureDifference(int difference) {
         System.out.println("Setting pressure dif " + difference);
-        pressureLabel3.setText(pressureLabel2.getText());
-        pressureLabel2.setText(pressureLabel.getText());
-        pressureLabel.setText(new DecimalFormat("000").format(difference));
-        blink(pressureLabel, 200);
+        pressureDifLabel3.setText(pressureDifLabel2.getText());
+        pressureDifLabel2.setText(pressureDiffLabel.getText());
+        pressureDiffLabel.setText(new DecimalFormat("000").format(difference));
+        blink(pressureDiffLabel, 200);
         this.lastPressureDifference = this.pressureDifference;
         this.pressureDifference = difference;
     }
@@ -309,6 +339,28 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     public int getLastPressureDifference() {
         return this.lastPressureDifference;
+    }
+
+    public int getHighPressure() {
+        return highPressure;
+    }
+
+    public int getLowPressure() {
+        return lowPressure;
+    }
+
+    @Override
+    public void showPressureTab() {
+        Platform.runLater(() -> {
+            tabPane.getSelectionModel().select(1);
+        });
+    }
+
+    @Override
+    public void showWeatherTab() {
+        Platform.runLater(() -> {
+            tabPane.getSelectionModel().select(0);
+        });
     }
 
     @Override

@@ -36,6 +36,13 @@ public class WeatherPublisherChorusHandler {
         ChorusContext.getContext().put("precipitation", precipitation);
     }
 
+    @Step("I set the pressure to (\\d+), (\\d+)")
+    public void setPrecipitation(int low, int high) {
+        weatherPublisherControl.setPressure(low, high);
+        ChorusContext.getContext().put("pressureLow", low);
+        ChorusContext.getContext().put("pressureHigh", high);
+    }
+
     @Step("I set temp, wind and precipitation to ([-\\d]+), (\\d+), (\\w+)")
     public void setPrecipitation(int temp, int wind, String precipitation) {
         setTemperature(temp);
