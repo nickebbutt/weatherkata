@@ -4,10 +4,12 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -36,8 +38,18 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
         primaryStage.setScene(scene);
         primaryStage.setTitle("Weather Publisher");
         scene.getStylesheets().add("stylesheetPublisher.css");
-        primaryStage.setOnCloseRequest((w) -> {System.exit(0);});
+        primaryStage.setOnCloseRequest((w) -> {
+            System.exit(0);
+        });
+
         primaryStage.show();
+
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        double xCenter = ((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+        double yCenter = ((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+
+        primaryStage.setX(xCenter - 200);
+        primaryStage.setY(yCenter - 200);
     }
 
     private Parent createContent(Stage primaryStage) {

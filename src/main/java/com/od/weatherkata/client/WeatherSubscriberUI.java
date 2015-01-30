@@ -3,6 +3,7 @@ package com.od.weatherkata.client;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +13,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -71,6 +73,13 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         });
 
         primaryStage.show();
+
+        Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        double xCenter = ((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+        double yCenter = ((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+
+        primaryStage.setX(xCenter + 250);
+        primaryStage.setY(yCenter);
     }
 
     private Parent createContent(Stage primaryStage) {

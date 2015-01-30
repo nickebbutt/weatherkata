@@ -26,7 +26,7 @@ public class WeatherSubscriberChorusHandler {
     }
 
     @Step("I (can|can't) travel by (train|balloon|snowmobile)")
-    @PassesWithin(length=2)
+    @PassesWithin(length=1)
     public void checkCanTravel(String canOrCant, String transport) {
         uiControl.showWeatherTab();
         checkExpectedValuesSet();
@@ -36,7 +36,7 @@ public class WeatherSubscriberChorusHandler {
     }
 
     @Step("the pressure difference is (\\d+)")
-    @PassesWithin(length=2)
+    @PassesWithin(length=1)
     public void checkPressure(int pressureDiff) {
         uiControl.showPressureTab();
         checkExpectedValuesSet();
@@ -44,7 +44,7 @@ public class WeatherSubscriberChorusHandler {
     }
 
     @Step("the last pressure difference is (\\d+)")
-    @PassesWithin(length=2)
+    @PassesWithin(length=1)
     public void checkLastPressure(int lastPressureDiff) {
         uiControl.showPressureTab();
         checkExpectedValuesSet();
