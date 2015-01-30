@@ -157,7 +157,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     private Node getTrainLabel() {
         return getVehicleLabel(
-                "Thameslink Train:",
+                "Train:",
                 "Requires:\n" +
                 "Temperature = 18\n" +
                 "Wind Strength = 0\n" +
@@ -234,8 +234,8 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     private void showVehicle(ImageView imageView, Boolean newValue) {
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), imageView);
-        fadeTransition.setFromValue(newValue ? 0.3 : 1);
-        fadeTransition.setToValue(newValue ? 1 : 0.3);
+        fadeTransition.setFromValue(newValue ? 0.2 : 1);
+        fadeTransition.setToValue(newValue ? 1 : 0.2);
         fadeTransition.setAutoReverse(false);
         fadeTransition.setCycleCount(1);
         fadeTransition.play();
