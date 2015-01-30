@@ -7,7 +7,7 @@ import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
 
 /**
- * Created by GA2EBBU on 29/01/2015.
+ * Created by Nick E on 29/01/2015.
  */
 @Handler("Weather Publisher")
 public class WeatherPublisherChorusHandler {

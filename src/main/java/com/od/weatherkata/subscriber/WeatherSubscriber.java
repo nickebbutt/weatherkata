@@ -5,7 +5,7 @@ import rx.Observable;
 import java.util.Map;
 
 /**
- * Created by GA2EBBU on 27/01/2015.
+ * Created by Nick E on 27/01/2015.
  */
 public class WeatherSubscriber {
 

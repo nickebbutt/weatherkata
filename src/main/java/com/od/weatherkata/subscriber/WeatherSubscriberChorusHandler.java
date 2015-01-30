@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * Created by GA2EBBU on 29/01/2015.
+ * Created by Nick E on 29/01/2015.
  */
 @Handler("Weather Subscriber")
 public class WeatherSubscriberChorusHandler {

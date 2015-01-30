@@ -10,7 +10,7 @@ import java.lang.management.ManagementFactory;
 import java.rmi.registry.LocateRegistry;
 
 /**
- * Created by GA2EBBU on 29/01/2015.
+ * Created by Nick E on 29/01/2015.
  */
 public class Jmx {
 

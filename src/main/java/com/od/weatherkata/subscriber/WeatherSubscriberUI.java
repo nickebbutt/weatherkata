@@ -21,7 +21,7 @@ import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Created by GA2EBBU on 27/01/2015.
+ * Created by Nick E on 27/01/2015.
  */
 public class WeatherSubscriberUI extends Application implements WeatherSubscriberControl {
 
