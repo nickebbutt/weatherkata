@@ -42,7 +42,8 @@ public class WeatherSubscriber {
 
     private void connectBalloon(WeatherSubscriberControl uiControl) {
         Observable<Boolean> isFish = precipitation.map("Fish"::equals);
-        Observable<Boolean> shouldFly = Observable.combineLatest(isFish, windStrength, (f, w) -> w < 5 && ! f);
+        Observable<Boolean> windOk = windStrength.map(w -> w < 5);
+        Observable<Boolean> shouldFly = Observable.combineLatest(isFish, windOk, (f, w) ->  w && ! f);
         shouldFly.distinctUntilChanged().subscribe(uiControl::setBalloonEnabled);
     }
 
