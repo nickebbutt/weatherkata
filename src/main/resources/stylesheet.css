@@ -1,0 +1,44 @@
+.root{
+    -fx-font-size: 18pt;
+    -fx-base: rgb(132, 145, 47);
+    -fx-background: rgb(0, 0, 0);
+}
+
+.bordered-panel{
+    -fx-padding: 12 12 12 12;
+}
+
+.transportComponent {
+    -fx-pref-width: 400;
+    -fx-pref-height: 130;
+    -fx-alignment: center;
+}
+
+.infoPanelComponent {
+    -fx-pref-width: 400;
+    -fx-pref-height: 30;
+}
+
+.descLabel {
+    -fx-font-size: 12;
+    -fx-wrap-text: true;
+    -fx-text-fill: gray;
+    -fx-pref-width: 200;
+}
+
+.pressureLabel2 {
+    -fx-opacity: 0.6;
+}
+
+.pressureLabel3 {
+    -fx-opacity: 0.3;
+}
+
+.tab .tab-label {
+    -fx-text-fill: black;
+    -fx-font-size: 14pt;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}
