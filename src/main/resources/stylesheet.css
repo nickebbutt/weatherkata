@@ -33,3 +33,12 @@
 .pressureLabel3 {
     -fx-opacity: 0.3;
 }
+
+.tab .tab-label {
+    -fx-text-fill: black;
+    -fx-font-size: 14pt;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: white;
+}

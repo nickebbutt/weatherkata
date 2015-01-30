@@ -41,7 +41,6 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
     private Parent createContent(Stage primaryStage) {
         VBox vBox = new VBox();
 
-
         //https://gist.github.com/jewelsea/1962045
 
         tempSlider = new Slider(-20, 50, 0);
@@ -142,10 +141,14 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
         Region s3 = createVerticalGlue();
 
         Button sendButton = new Button("Send");
+
         HBox buttonBox = new HBox();
         Region r = getHorizontalGlue();
         buttonBox.getChildren().addAll(r, sendButton);
-        sendButton.setOnAction(e -> {publisher.sendPressure((int)lowPressure.getValue(), (int)highPressure.getValue());});
+        sendButton.setOnAction(e -> {
+            publisher.sendPressure((int)lowPressure.getValue(), (int)highPressure.getValue());}
+        );
+        buttonBox.getStyleClass().add("sendButton");
 
         VBox vbox = new VBox();
         Region s1 = new Region();

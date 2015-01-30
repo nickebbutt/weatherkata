@@ -26,14 +26,15 @@
     -fx-pref-width: 200;
 }
 
-.pressureLabel1 {
-    -fx-opacity: 1;
+.tab .tab-label {
+    -fx-text-fill: black;
+    -fx-font-size: 14pt;
 }
 
-.pressureLabel2 {
-    -fx-opacity: 0.6;
+.tab:selected .tab-label {
+    -fx-text-fill: white;
 }
 
-.pressureLabel3 {
-    -fx-opacity: 0.3;
+.sendButton {
+    -fx-padding: 12 12 12 12;
 }

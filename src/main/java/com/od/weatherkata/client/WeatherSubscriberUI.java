@@ -104,7 +104,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         vBox.getStyleClass().add("bordered-panel");
 
         TabPane tabPane = new TabPane();
-        Tab transport = new Tab("Transport");
+        Tab transport = new Tab("Weather");
         transport.setContent(vBox);
         tabPane.getTabs().add(transport);
 
@@ -115,10 +115,12 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         VBox pressureBox = new VBox();
         pressureBox.getChildren().addAll(spacerA, pressurePane, spacerB);
 
-        Tab pressureTab = new Tab("Pressure");
+        Tab pressureTab = new Tab("Atmospheric Pressure");
+        pressureTab.getStyleClass().add("tab-pane");
         pressureTab.setContent(pressureBox);
         tabPane.getTabs().add(pressureTab);
 
+        tabPane.getStyleClass().add("tab-pane");
         return tabPane;
     }
 
@@ -177,10 +179,10 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     private Pane createPressurePane() {
         VBox box = new VBox();
-        Label label1 = new Label("Pressure Range:");
+        Label label1 = new Label("Pressure Difference:");
         Label label3 = new Label();
         Label label2 = new Label();
-        setPreferredWidth(200, label1, label2, label3);
+        setPreferredWidth(220, label1, label2, label3);
 
         box.getChildren().add(getLabeledComponent(label1, pressureLabel, "pressureLabel1"));
         box.getChildren().add(getLabeledComponent(label2, pressureLabel2, "pressureLabel2"));
