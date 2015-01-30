@@ -1,11 +1,10 @@
-package com.od.weatherkata.client;
+package com.od.weatherkata.subscriber;
 
 import rx.Observable;
 import rx.functions.Func1;
 
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 
 /**
  * Created by GA2EBBU on 27/01/2015.

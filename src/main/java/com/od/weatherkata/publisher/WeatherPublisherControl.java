@@ -1,6 +1,4 @@
-package com.od.weatherkata.server;
-
-import javafx.application.Platform;
+package com.od.weatherkata.publisher;
 
 /**
  * Created by GA2EBBU on 29/01/2015.

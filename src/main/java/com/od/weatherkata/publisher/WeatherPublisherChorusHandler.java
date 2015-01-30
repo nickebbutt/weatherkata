@@ -1,4 +1,4 @@
-package com.od.weatherkata.server;
+package com.od.weatherkata.publisher;
 
 import com.od.weatherkata.util.Jmx;
 import org.chorusbdd.chorus.annotations.Handler;

@@ -1,6 +1,4 @@
-package com.od.weatherkata.client;
-
-import java.text.DecimalFormat;
+package com.od.weatherkata.subscriber;
 
 /**
  * Created by GA2EBBU on 29/01/2015.

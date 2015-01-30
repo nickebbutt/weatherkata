@@ -1,4 +1,4 @@
-package com.od.weatherkata.server;
+package com.od.weatherkata.publisher;
 
 import org.zeromq.ZMQ;
 

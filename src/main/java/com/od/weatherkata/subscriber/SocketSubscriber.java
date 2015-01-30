@@ -1,4 +1,4 @@
-package com.od.weatherkata.client;
+package com.od.weatherkata.subscriber;
 
 import javafx.application.Platform;
 import org.zeromq.ZMQ;
