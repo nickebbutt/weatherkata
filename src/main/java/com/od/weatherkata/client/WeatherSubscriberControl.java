@@ -29,4 +29,9 @@ public interface WeatherSubscriberControl {
 
     boolean isTrainEnabled();
 
+    void setPressureDifference(int difference);
+
+    int getPressureDifference();
+
+    int getLastPressureDifference();
 }

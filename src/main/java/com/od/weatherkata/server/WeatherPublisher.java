@@ -39,31 +39,48 @@ public class WeatherPublisher {
         }, 2, 2, TimeUnit.SECONDS);
     }
 
+
     public void sendTemperature(int temp) {
         this.temp = temp;
-        scheduledExecutorService.execute(() -> { doSendTemp(); });
+        scheduledExecutorService.execute(this::doSendTemp);
     }
 
     private void doSendTemp() {
-        publisher.send("temp:{" + temp + "}", 0);
+        doSend("temp:{" + temp + "}");
     }
 
     public void sendWindStrength (int windStrength) {
         this.wind = windStrength;
-        scheduledExecutorService.execute(() -> { doSendWind(); });
+        scheduledExecutorService.execute(this::doSendWind);
     }
 
     private void doSendWind() {
-        publisher.send("wind:{" + wind + "}", 0);
+        doSend("wind:{" + wind + "}");
     }
+
 
     public void sendPrecipitation(String precipitation) {
         this.precipitation = precipitation;
-        scheduledExecutorService.execute(() -> { doSendPrecipitation(); });
+        scheduledExecutorService.execute(this::doSendPrecipitation);
     }
 
     private void doSendPrecipitation() {
-        publisher.send("precipitation:{" + precipitation + "}", 0);
+        doSend("precipitation:{" + precipitation + "}");
     }
 
+
+
+    public void sendPressure(int lowPressure, int highPressure) {
+        scheduledExecutorService.execute(() -> { doSendPressure(lowPressure, highPressure); });
+    }
+
+    private void doSendPressure(int low, int high) {
+        //send atomically, don't autosend periodically like the others
+        doSend("pressure:{" + low + "," + high + "}");
+    }
+
+    private void doSend(String s) {
+        System.out.println("Sending: " + s);
+        publisher.send(s, 0);
+    }
 }

@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.text.DecimalFormat;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -25,10 +26,9 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     private final Label precipitationLabel = new Label();
     private final Label windStrengthLabel = new Label();
 
-    private final Label pressureLabel = new Label();
+    private final Label pressureLabel = new Label("000");
     private final Label pressureLabel2 = new Label();
     private final Label pressureLabel3 = new Label();
-
 
     private WeatherSubscriber weatherSubscriber;
     private ImageView snowMobile;
@@ -42,7 +42,8 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     private volatile int tempVal;
     private volatile int windVal;
     private volatile String precipitationVal;
-
+    private volatile int lastPressureDifference;
+    private volatile int pressureDifference;
 
     public void init() throws Exception {
         weatherSubscriber = new WeatherSubscriber(this);
@@ -102,17 +103,17 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
         vBox.getStyleClass().add("bordered-panel");
 
+        TabPane tabPane = new TabPane();
+        Tab transport = new Tab("Transport");
+        transport.setContent(vBox);
+        tabPane.getTabs().add(transport);
+
 
         Region spacerA = getVerticalSpace();
         Pane pressurePane = createPressurePane();
         Region spacerB = getVerticalSpace();
         VBox pressureBox = new VBox();
         pressureBox.getChildren().addAll(spacerA, pressurePane, spacerB);
-
-        TabPane tabPane = new TabPane();
-        Tab transport = new Tab("Transport");
-        transport.setContent(vBox);
-        tabPane.getTabs().add(transport);
 
         Tab pressureTab = new Tab("Pressure");
         pressureTab.setContent(pressureBox);
@@ -176,11 +177,21 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     private Pane createPressurePane() {
         VBox box = new VBox();
-        box.getChildren().add(getLabeledComponent(new Label(""), pressureLabel3, "pressureLabel3"));
-        box.getChildren().add(getLabeledComponent(new Label(""), pressureLabel2, "pressureLabel2"));
-        box.getChildren().add(getLabeledComponent(new Label("Pressure Range:"), pressureLabel, "pressureLabel1"));
+        Label label1 = new Label("Pressure Range:");
+        Label label3 = new Label();
+        Label label2 = new Label();
+        setPreferredWidth(200, label1, label2, label3);
 
+        box.getChildren().add(getLabeledComponent(label1, pressureLabel, "pressureLabel1"));
+        box.getChildren().add(getLabeledComponent(label2, pressureLabel2, "pressureLabel2"));
+        box.getChildren().add(getLabeledComponent(label3, pressureLabel3, "pressureLabel3"));
         return box;
+    }
+
+    private void setPreferredWidth(int i, Label... l) {
+        for (Label label : l ) {
+            label.setPrefWidth(i);
+        }
     }
 
     private ImageView createImage(String url) {
@@ -201,7 +212,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         fadeTransition.play();
     }
 
-    private Parent getLabeledComponent(Node labelText, Node control, String cssClass) {
+    private Parent getLabeledComponent(Node label, Node control, String cssClass) {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
@@ -212,7 +223,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         HBox.setHgrow(spacer3, Priority.ALWAYS);
 
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(spacer, labelText, spacer2, control, spacer3);
+        hBox.getChildren().addAll(spacer, label, spacer2, control, spacer3);
         hBox.getStyleClass().add(cssClass);
         return hBox;
     }
@@ -220,7 +231,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     @Override
     public void setTemperature(int temperature) {
         tempLabel.setText(temperature + "%");
-        blink(tempLabel);
+        blink(tempLabel, 200);
         tempVal = temperature;
     }
 
@@ -232,7 +243,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     @Override
     public void setWindStrength(int windStrength) {
         windStrengthLabel.setText(String.valueOf(windStrength));
-        blink(windStrengthLabel);
+        blink(windStrengthLabel, 200);
         windVal = windStrength;
     }
 
@@ -244,7 +255,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     @Override
     public void setPrecipitation(String precipitation) {
         precipitationLabel.setText(precipitation);
-        blink(precipitationLabel);
+        blink(precipitationLabel, 500);
         precipitationVal = precipitation;
     }
 
@@ -253,8 +264,8 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         return precipitationVal;
     }
 
-    private void blink(Node n) {
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(100), n);
+    private void blink(Node n, int duration) {
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(duration), n);
         fadeTransition.setFromValue(0.3);
         fadeTransition.setToValue(1);
         fadeTransition.setAutoReverse(true);
@@ -278,6 +289,24 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         System.out.println("Enabling train " + enabled);
         trainEnabled.set(enabled);
         showVehicle(train, enabled);
+    }
+
+    public void setPressureDifference(int difference) {
+        System.out.println("Setting pressure dif " + difference);
+        pressureLabel3.setText(pressureLabel2.getText());
+        pressureLabel2.setText(pressureLabel.getText());
+        pressureLabel.setText(new DecimalFormat("000").format(difference));
+        blink(pressureLabel, 200);
+        this.lastPressureDifference = this.pressureDifference;
+        this.pressureDifference = difference;
+    }
+
+    public int getPressureDifference() {
+        return this.pressureDifference;
+    }
+
+    public int getLastPressureDifference() {
+        return this.lastPressureDifference;
     }
 
     @Override

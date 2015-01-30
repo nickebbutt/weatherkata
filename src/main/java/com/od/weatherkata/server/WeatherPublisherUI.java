@@ -15,7 +15,6 @@ import javafx.stage.Stage;
  */
 public class WeatherPublisherUI extends Application implements WeatherPublisherControl {
 
-    private Stage primaryStage;
     private WeatherPublisher publisher;
     private Slider tempSlider;
     private Slider windStrengthSlider;
@@ -30,11 +29,11 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        this.primaryStage = primaryStage;
         Parent content = createContent(primaryStage);
         Scene scene = new Scene(content);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Weather Publisher");
+        scene.getStylesheets().add("stylesheetPublisher.css");
         primaryStage.setOnCloseRequest((w) -> {System.exit(0);});
         primaryStage.show();
     }
@@ -89,11 +88,9 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
         );
 
 
-        Region spacerTop = new Region();
-        VBox.setVgrow(spacerTop, Priority.ALWAYS);
+        Region spacerTop = createVerticalGlue();
 
-        Region spacerBottom = new Region();
-        VBox.setVgrow(spacerBottom, Priority.ALWAYS);
+        Region spacerBottom = createVerticalGlue();
 
         vBox.getChildren().addAll(
                 spacerTop,
@@ -104,29 +101,31 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
                 getLabeledComponent("Wind Strength:", windStrengthSlider),
                 spacerBottom
         );
-//
-//        Pane pressureBox = createPressureBox();
-//
-//        TabPane tabPane = new TabPane();
-//
-//        Tab transport = new Tab("Weather");
-//        transport.setContent(vBox);
-//        tabPane.getTabs().add(transport);
-//
-//        Tab pressureTab = new Tab("Atmospheric Pressure");
-//        //pressureTab.setContent(pressureBox);
-//        tabPane.getTabs().add(pressureTab);
-//        return tabPane;
-        return vBox;
+
+        vBox.getStyleClass().add("bordered-panel");
+
+
+        Pane pressureBox = createPressureBox();
+
+        TabPane tabPane = new TabPane();
+
+        Tab transport = new Tab("Weather");
+        transport.setContent(vBox);
+        tabPane.getTabs().add(transport);
+
+        Tab pressureTab = new Tab("Atmospheric Pressure");
+        pressureTab.setContent(pressureBox);
+        tabPane.getTabs().addAll(pressureTab);
+        return tabPane;
     }
 
     private Pane createPressureBox() {
         lowPressure = new Slider(0, 1000, 400);
         lowPressure.setShowTickLabels(true);
         lowPressure.setMajorTickUnit(100);
-        lowPressure.setMinorTickCount(1);
+        lowPressure.setMinorTickCount(2);
         lowPressure.setShowTickMarks(true);
-        lowPressure.setBlockIncrement(1);
+        lowPressure.setBlockIncrement(10);
         lowPressure.setSnapToTicks(false);
 
         highPressure = new Slider(0, 1000, 600);
@@ -134,16 +133,61 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
         highPressure.setMajorTickUnit(100);
         highPressure.setMinorTickCount(1);
         highPressure.setShowTickMarks(true);
-        highPressure.setBlockIncrement(1);
+        highPressure.setBlockIncrement(10);
         highPressure.setSnapToTicks(false);
+
+        linkSliders();
+
+        Region s2 = createVerticalGlue();
+        Region s3 = createVerticalGlue();
+
+        Button sendButton = new Button("Send");
+        HBox buttonBox = new HBox();
+        Region r = getHorizontalGlue();
+        buttonBox.getChildren().addAll(r, sendButton);
+        sendButton.setOnAction(e -> {publisher.sendPressure((int)lowPressure.getValue(), (int)highPressure.getValue());});
 
         VBox vbox = new VBox();
         Region s1 = new Region();
         s1.setPrefHeight(10);
-        vbox.getChildren().addAll(getLabeledComponent("Pressure Low mBar", lowPressure));
-        vbox.getChildren().addAll(s1);
-        vbox.getChildren().addAll(getLabeledComponent("Pressure High mBar", highPressure));
+        vbox.getChildren().add(s2);
+        vbox.getChildren().add(getLabeledComponent("Pressure Low", lowPressure));
+        vbox.getChildren().add(s1);
+        vbox.getChildren().add(getLabeledComponent("Pressure High", highPressure));
+        vbox.getChildren().add(s3);
+        vbox.getChildren().add(buttonBox);
         return vbox;
+    }
+
+    private Region getHorizontalGlue() {
+        Region r = new Region();
+        HBox.setHgrow(r, Priority.ALWAYS);
+        return r;
+    }
+
+    //don't allow them to cross
+    private void linkSliders() {
+        highPressure.valueProperty().addListener((v, o, n) -> {
+                double lowVal = lowPressure.getValue();
+                if ( n.doubleValue() < lowVal) {
+                highPressure.setValue(lowVal);
+            }
+        }
+        );
+
+        lowPressure.valueProperty().addListener((v, o, n) -> {
+                double highVal = highPressure.getValue();
+                if ( n.doubleValue() > highVal) {
+                    lowPressure.setValue(highVal);
+                }
+            }
+        );
+    }
+
+    private Region createVerticalGlue() {
+        Region s3 = new Region();
+        VBox.setVgrow(s3, Priority.ALWAYS);
+        return s3;
     }
 
     public void setTemperature(int temp) {
@@ -161,14 +205,12 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
     }
 
     private Parent getLabeledComponent(String labelText, Control control) {
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
+        Region spacer = getHorizontalGlue();
 
         Region spacer2 = new Region();
         spacer2.setPrefWidth(20);
 
-        Region spacer3 = new Region();
-        HBox.setHgrow(spacer3, Priority.ALWAYS);
+        Region spacer3 = getHorizontalGlue();
 
         Label label = new Label(labelText);
 

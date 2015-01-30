@@ -2,6 +2,8 @@ package com.od.weatherkata.client;
 
 import rx.Observable;
 
+import java.util.Map;
+
 /**
  * Created by GA2EBBU on 27/01/2015.
  */
@@ -12,12 +14,22 @@ public class WeatherSubscriber {
     private Observable<String> precipitation = socketSubscriber.getPrecipitationObservable();
     private Observable<Integer> temperature = socketSubscriber.getTemperatureObservable();
     private Observable<Integer> windStrength = socketSubscriber.getWindStrengthObservable();
+    private Observable<Integer> pressureLow = socketSubscriber.getLowPressureObservable();
+    private Observable<Integer> pressureHigh = socketSubscriber.getHighPressureObservable();
+    private Observable<Map<String,Integer>> pressureDeltas = socketSubscriber.getPressureDeltasObservable();
+
 
     public WeatherSubscriber(WeatherSubscriberControl uiControl) {
         connectStatusPanel(uiControl);
         connectSnowMobile(uiControl);
         connectBalloon(uiControl);
         connectTrain(uiControl);
+        connectPressureDifference(uiControl);
+    }
+
+    private void connectPressureDifference(WeatherSubscriberControl uiControl) {
+        Observable<Integer> pressureDif = Observable.combineLatest(pressureLow, pressureHigh, (l, h) -> h-l);
+        pressureDif.distinctUntilChanged().subscribe(uiControl::setPressureDifference);
     }
 
     private void connectStatusPanel(WeatherSubscriberControl uiControl) {
