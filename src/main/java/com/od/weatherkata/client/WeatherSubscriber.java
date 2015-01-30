@@ -31,39 +31,6 @@ public class WeatherSubscriber {
         connectPressureDifference(uiControl);
     }
 
-    private void connectPressure(WeatherSubscriberControl uiControl) {
-        pressureLow.subscribe(uiControl::setLowPressure);
-        pressureHigh.subscribe(uiControl::setHighPressure);
-    }
-
-    private void connectPressureDifference(WeatherSubscriberControl uiControl) {
-        pressureDeltas.map(getPressureChangeFunction()).subscribe(o -> {
-            o.ifPresent(uiControl::setPressureDifference);
-        });
-    }
-
-    private static Func1<Map<String,Integer>, Optional<Integer>> getPressureChangeFunction() {
-        return new Func1<Map<String,Integer>, Optional<Integer>>() {
-            int low = -1;
-            int high = -1;
-
-            @Override
-            public Optional<Integer> call(Map<String, Integer> m) {
-                if (m.containsKey("lowPressure")) {
-                    low = m.get("lowPressure");
-                }
-
-                if (m.containsKey("highPressure")) {
-                    high = m.get("highPressure");
-                }
-
-                return low != -1 && high != -1 ?
-                        Optional.of(high - low) :
-                        Optional.empty();
-            }
-        };
-    }
-
     private void connectStatusPanel(WeatherSubscriberControl uiControl) {
         temperature.distinctUntilChanged().subscribe(uiControl::setTemperature);
         windStrength.distinctUntilChanged().subscribe(uiControl::setWindStrength);
@@ -88,7 +55,42 @@ public class WeatherSubscriber {
         canCommute.distinctUntilChanged().subscribe(uiControl::setTrainEnabled);
     }
 
+    private void connectPressure(WeatherSubscriberControl uiControl) {
+        pressureLow.subscribe(uiControl::setLowPressure);
+        pressureHigh.subscribe(uiControl::setHighPressure);
+    }
+
+    private void connectPressureDifference(WeatherSubscriberControl uiControl) {
+        pressureDeltas.map(getPressureChangeFunction()).subscribe(o -> {
+            o.ifPresent(uiControl::setPressureDifference);
+        });
+    }
+
+    private Func1<Map<String,Integer>, Optional<Integer>> getPressureChangeFunction() {
+        return new Func1<Map<String,Integer>, Optional<Integer>>() {
+            int low = -1;
+            int high = -1;
+
+            @Override
+            public Optional<Integer> call(Map<String, Integer> m) {
+                if (m.containsKey("lowPressure")) {
+                    low = m.get("lowPressure");
+                }
+
+                if (m.containsKey("highPressure")) {
+                    high = m.get("highPressure");
+                }
+
+                return low != -1 && high != -1 ?
+                        Optional.of(high - low) :
+                        Optional.empty();
+            }
+        };
+    }
+
     public void subscribe() {
         socketSubscriber.subscribe();
     }
+
+
 }
