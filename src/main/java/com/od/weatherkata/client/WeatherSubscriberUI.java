@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -22,6 +24,12 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     private final Label tempLabel = new Label();
     private final Label precipitationLabel = new Label();
     private final Label windStrengthLabel = new Label();
+
+    private final Label pressureLabel = new Label();
+    private final Label pressureLabel2 = new Label();
+    private final Label pressureLabel3 = new Label();
+
+
     private WeatherSubscriber weatherSubscriber;
     private ImageView snowMobile;
     private ImageView balloon;
@@ -93,8 +101,24 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         );
 
         vBox.getStyleClass().add("bordered-panel");
-        return vBox;
 
+
+        Region spacerA = getVerticalSpace();
+        Pane pressurePane = createPressurePane();
+        Region spacerB = getVerticalSpace();
+        VBox pressureBox = new VBox();
+        pressureBox.getChildren().addAll(spacerA, pressurePane, spacerB);
+
+        TabPane tabPane = new TabPane();
+        Tab transport = new Tab("Transport");
+        transport.setContent(vBox);
+        tabPane.getTabs().add(transport);
+
+        Tab pressureTab = new Tab("Pressure");
+        pressureTab.setContent(pressureBox);
+        tabPane.getTabs().add(pressureTab);
+
+        return tabPane;
     }
 
     private Node getSnowMobileLabel() {
@@ -147,6 +171,15 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
         box.getChildren().add(getLabeledComponent(new Label("Current Temperature:"), tempLabel, "infoPanelComponent"));
         box.getChildren().add(getLabeledComponent(new Label("Current Wind Strength:"), windStrengthLabel, "infoPanelComponent"));
         box.getChildren().add(getLabeledComponent(new Label("Current Precipitation:"), precipitationLabel, "infoPanelComponent"));
+        return box;
+    }
+
+    private Pane createPressurePane() {
+        VBox box = new VBox();
+        box.getChildren().add(getLabeledComponent(new Label(""), pressureLabel3, "pressureLabel3"));
+        box.getChildren().add(getLabeledComponent(new Label(""), pressureLabel2, "pressureLabel2"));
+        box.getChildren().add(getLabeledComponent(new Label("Pressure Range:"), pressureLabel, "pressureLabel1"));
+
         return box;
     }
 

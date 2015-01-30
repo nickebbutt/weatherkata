@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Control;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -23,6 +20,8 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
     private Slider tempSlider;
     private Slider windStrengthSlider;
     private ComboBox<String> precipitationCombo;
+    private Slider lowPressure;
+    private Slider highPressure;
 
     public void init() throws Exception {
         publisher = new WeatherPublisher();
@@ -35,8 +34,6 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
         Parent content = createContent(primaryStage);
         Scene scene = new Scene(content);
         primaryStage.setScene(scene);
-        primaryStage.setWidth(400);
-        primaryStage.setHeight(300);
         primaryStage.setTitle("Weather Publisher");
         primaryStage.setOnCloseRequest((w) -> {System.exit(0);});
         primaryStage.show();
@@ -107,7 +104,46 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
                 getLabeledComponent("Wind Strength:", windStrengthSlider),
                 spacerBottom
         );
+//
+//        Pane pressureBox = createPressureBox();
+//
+//        TabPane tabPane = new TabPane();
+//
+//        Tab transport = new Tab("Weather");
+//        transport.setContent(vBox);
+//        tabPane.getTabs().add(transport);
+//
+//        Tab pressureTab = new Tab("Atmospheric Pressure");
+//        //pressureTab.setContent(pressureBox);
+//        tabPane.getTabs().add(pressureTab);
+//        return tabPane;
         return vBox;
+    }
+
+    private Pane createPressureBox() {
+        lowPressure = new Slider(0, 1000, 400);
+        lowPressure.setShowTickLabels(true);
+        lowPressure.setMajorTickUnit(100);
+        lowPressure.setMinorTickCount(1);
+        lowPressure.setShowTickMarks(true);
+        lowPressure.setBlockIncrement(1);
+        lowPressure.setSnapToTicks(false);
+
+        highPressure = new Slider(0, 1000, 600);
+        highPressure.setShowTickLabels(true);
+        highPressure.setMajorTickUnit(100);
+        highPressure.setMinorTickCount(1);
+        highPressure.setShowTickMarks(true);
+        highPressure.setBlockIncrement(1);
+        highPressure.setSnapToTicks(false);
+
+        VBox vbox = new VBox();
+        Region s1 = new Region();
+        s1.setPrefHeight(10);
+        vbox.getChildren().addAll(getLabeledComponent("Pressure Low mBar", lowPressure));
+        vbox.getChildren().addAll(s1);
+        vbox.getChildren().addAll(getLabeledComponent("Pressure High mBar", highPressure));
+        return vbox;
     }
 
     public void setTemperature(int temp) {
@@ -115,7 +151,9 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
     }
 
     public void setWind(int wind) {
-        Platform.runLater( () -> { windStrengthSlider.setValue(wind);});
+        Platform.runLater(() -> {
+            windStrengthSlider.setValue(wind);
+        });
     }
 
     public void setPrecipitation(String precipitation) {

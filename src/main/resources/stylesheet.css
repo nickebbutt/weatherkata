@@ -25,3 +25,11 @@
     -fx-text-fill: gray;
     -fx-pref-width: 200;
 }
+
+.pressureLabel2 {
+    -fx-opacity: 0.6;
+}
+
+.pressureLabel3 {
+    -fx-opacity: 0.3;
+}
