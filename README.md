@@ -10,7 +10,7 @@ From the controller you can change various aspects of the weather.
 The subscriber receives push notifications of these changes via a ZeroMQ sockets connection
 
 The **rx-java** framework has been chosen as the reactive programming library.  
-You jdk 1.8+ with maven to build the project (or add the maven dependencies manually)
+You need jdk 1.8+ with maven to build the project (or add the maven dependencies manually)
 
 ### Your Mission ###
 
