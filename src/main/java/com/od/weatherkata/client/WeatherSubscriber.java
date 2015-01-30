@@ -1,8 +1,11 @@
 package com.od.weatherkata.client;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Created by GA2EBBU on 27/01/2015.
@@ -34,8 +37,31 @@ public class WeatherSubscriber {
     }
 
     private void connectPressureDifference(WeatherSubscriberControl uiControl) {
-        Observable<Integer> pressureDif = Observable.combineLatest(pressureLow, pressureHigh, (l, h) -> h-l);
-        pressureDif.distinctUntilChanged().subscribe(uiControl::setPressureDifference);
+        pressureDeltas.map(getPressureChangeFunction()).subscribe(o -> {
+            o.ifPresent(uiControl::setPressureDifference);
+        });
+    }
+
+    private static Func1<Map<String,Integer>, Optional<Integer>> getPressureChangeFunction() {
+        return new Func1<Map<String,Integer>, Optional<Integer>>() {
+            int low = -1;
+            int high = -1;
+
+            @Override
+            public Optional<Integer> call(Map<String, Integer> m) {
+                if (m.containsKey("lowPressure")) {
+                    low = m.get("lowPressure");
+                }
+
+                if (m.containsKey("highPressure")) {
+                    high = m.get("highPressure");
+                }
+
+                return low != -1 && high != -1 ?
+                        Optional.of(high - low) :
+                        Optional.empty();
+            }
+        };
     }
 
     private void connectStatusPanel(WeatherSubscriberControl uiControl) {

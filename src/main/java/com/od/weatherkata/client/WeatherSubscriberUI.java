@@ -250,9 +250,11 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     @Override
     public void setTemperature(int temperature) {
-        tempLabel.setText(temperature + "%");
-        blink(tempLabel, 200);
-        tempVal = temperature;
+        Platform.runLater(() -> {
+            tempLabel.setText(temperature + "%");
+            blink(tempLabel, 200);
+            tempVal = temperature;
+        });
     }
 
     @Override
@@ -262,9 +264,11 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     @Override
     public void setWindStrength(int windStrength) {
-        windStrengthLabel.setText(String.valueOf(windStrength));
-        blink(windStrengthLabel, 200);
-        windVal = windStrength;
+        Platform.runLater(() -> {
+            windStrengthLabel.setText(String.valueOf(windStrength));
+            blink(windStrengthLabel, 200);
+            windVal = windStrength;
+        });
     }
 
     @Override
@@ -274,9 +278,11 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
 
     @Override
     public void setPrecipitation(String precipitation) {
-        precipitationLabel.setText(precipitation);
-        blink(precipitationLabel, 500);
-        precipitationVal = precipitation;
+        Platform.runLater(() -> {
+            precipitationLabel.setText(precipitation);
+            blink(precipitationLabel, 500);
+            precipitationVal = precipitation;
+        });
     }
 
     @Override
@@ -300,37 +306,47 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     }
 
     public void setBalloonEnabled(boolean enabled) {
-        System.out.println("Enabling balloon " + enabled);
-        balloonEnabled.set(enabled);
-        showVehicle(balloon, enabled);
+        Platform.runLater(() -> {
+            System.out.println("Enabling balloon " + enabled);
+            balloonEnabled.set(enabled);
+            showVehicle(balloon, enabled);
+        });
     }
 
     public void setTrainEnabled(boolean enabled) {
-        System.out.println("Enabling train " + enabled);
-        trainEnabled.set(enabled);
-        showVehicle(train, enabled);
+        Platform.runLater(() -> {
+            System.out.println("Enabling train " + enabled);
+            trainEnabled.set(enabled);
+            showVehicle(train, enabled);
+        });
     }
 
     public void setLowPressure(int lowPressure) {
-        System.out.println("Setting low pressure " + lowPressure);
-        lowPressureLabel.setText(new DecimalFormat("000").format(lowPressure));
-        this.lowPressure = lowPressure;
+        Platform.runLater(() -> {
+            System.out.println("Setting low pressure " + lowPressure);
+            lowPressureLabel.setText(new DecimalFormat("000").format(lowPressure));
+            this.lowPressure = lowPressure;
+        });
     }
 
     public void setHighPressure(int highPressure) {
-        System.out.println("Setting low pressure " + highPressure);
-        highPressureLabel.setText(new DecimalFormat("000").format(highPressure));
-        this.highPressure = highPressure;
+        Platform.runLater(() -> {
+            System.out.println("Setting low pressure " + highPressure);
+            highPressureLabel.setText(new DecimalFormat("000").format(highPressure));
+            this.highPressure = highPressure;
+        });
     }
 
     public void setPressureDifference(int difference) {
-        System.out.println("Setting pressure dif " + difference);
-        pressureDifLabel3.setText(pressureDifLabel2.getText());
-        pressureDifLabel2.setText(pressureDiffLabel.getText());
-        pressureDiffLabel.setText(new DecimalFormat("000").format(difference));
-        blink(pressureDiffLabel, 200);
-        this.lastPressureDifference = this.pressureDifference;
-        this.pressureDifference = difference;
+        Platform.runLater(() -> {
+            System.out.println("Setting pressure dif " + difference);
+            pressureDifLabel3.setText(pressureDifLabel2.getText());
+            pressureDifLabel2.setText(pressureDiffLabel.getText());
+            pressureDiffLabel.setText(new DecimalFormat("000").format(difference));
+            blink(pressureDiffLabel, 200);
+            this.lastPressureDifference = this.pressureDifference;
+            this.pressureDifference = difference;
+        });
     }
 
     public int getPressureDifference() {

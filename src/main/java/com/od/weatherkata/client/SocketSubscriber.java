@@ -88,12 +88,12 @@ public class SocketSubscriber {
 
                                 Map<String,Integer> deltas = new HashMap<String,Integer>();
                                 if ( lastLow != low) {
-                                    deltas.put("low", low);
+                                    deltas.put("lowPressure", low);
                                     lastLow = low;
                                 }
 
                                 if ( lastHigh != high) {
-                                    deltas.put("high", lastHigh);
+                                    deltas.put("highPressure", high);
                                     lastHigh = high;
                                 }
 
