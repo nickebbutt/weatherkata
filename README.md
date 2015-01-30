@@ -1,7 +1,7 @@
 
 ### Weather Kata ###
 
-This exercise can be used to demonstrate techniques in Functional Reactive Programming
+This exercise can be used to demonstrate techniques in Functional Reactive Programming  
 It follows on from the 'streamkata' which demonstrates functional programming using jdk 1.8 streams
 
 There are two simple User Interfaces provided - a weather publisher, and a weather subscriber
