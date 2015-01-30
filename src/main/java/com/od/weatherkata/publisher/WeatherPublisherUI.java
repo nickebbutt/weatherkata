@@ -13,7 +13,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
- * Created by GA2EBBU on 27/01/2015.
+ * Created by Nick E on 27/01/2015.
  */
 public class WeatherPublisherUI extends Application implements WeatherPublisherControl {
 

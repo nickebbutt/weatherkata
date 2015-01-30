@@ -7,7 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by GA2EBBU on 27/01/2015.
+ * Created by Nick E on 27/01/2015.
  */
 public class WeatherPublisher {
 
