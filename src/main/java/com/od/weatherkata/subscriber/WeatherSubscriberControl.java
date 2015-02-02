@@ -7,15 +7,9 @@ public interface WeatherSubscriberControl {
 
     void setTemperature(int temperature);
 
-    int getTemperature();
-
     void setWindStrength(int force);
 
-    int getWindStrength();
-
     void setPrecipitation(String precipitation);
-
-    String getPrecipitation();
 
     void setSnowMobileEnabled(boolean enabled);
 
@@ -23,17 +17,23 @@ public interface WeatherSubscriberControl {
 
     void setTrainEnabled(boolean enabled);
 
-    boolean isSnowMobileEnabled();
-
-    boolean isBalloonEnabled();
-
-    boolean isTrainEnabled();
-
     public void setLowPressure(int lowPressure);
 
     public void setHighPressure(int highPressure);
 
     public void setPressureDifference(int highPressure);
+
+    int getTemperature();
+
+    int getWindStrength();
+
+    String getPrecipitation();
+
+    boolean isSnowMobileEnabled();
+
+    boolean isBalloonEnabled();
+
+    boolean isTrainEnabled();
 
     int getPressureDifference();
 
