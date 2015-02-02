@@ -9,6 +9,13 @@
     Feature-Start:
 
 
+    Scenario: The temperature wind and precipitation are set
+      Given I set temp, wind and precipitation to 10, 5, Rain
+      Then the temperature is 10
+      And the wind strength is 5
+      And the precipitation is Rain
+
+
     ### Snow Mobile
 
     Scenario: I can travel by snowmobile when it is freezing

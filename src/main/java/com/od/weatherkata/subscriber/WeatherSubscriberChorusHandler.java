@@ -23,6 +23,24 @@ public class WeatherSubscriberChorusHandler {
         this.uiControl = uiControl;
     }
 
+    @PassesWithin(length=3)
+    @Step("the temperature is (\\d+)")
+    public void checkTemp(int temp) {
+        assertEquals(temp, uiControl.getTemperature());
+    }
+
+    @PassesWithin(length=3)
+    @Step("the wind strength is (\\d+)")
+    public void checkWind(int wind) {
+        assertEquals(wind, uiControl.getWindStrength());
+    }
+
+    @PassesWithin(length=3)
+    @Step("the precipitation is (\\w+)")
+    public void checkPrecipitation(String precip) {
+        assertEquals(precip, uiControl.getPrecipitation());
+    }
+
     @Step("I (can|can't) travel by (train|balloon|snowmobile)")
     @PassesWithin(length=3)
     public void checkCanTravel(String canOrCant, String transport) {
