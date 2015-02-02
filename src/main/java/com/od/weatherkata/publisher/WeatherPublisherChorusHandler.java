@@ -1,6 +1,5 @@
 package com.od.weatherkata.publisher;
 
-import com.od.weatherkata.util.Jmx;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.context.ChorusContext;
@@ -51,7 +50,6 @@ public class WeatherPublisherChorusHandler {
     }
 
     public static void exportChorusHandler(WeatherPublisherControl control) {
-        Jmx.startJmx(50123);
         WeatherPublisherChorusHandler handler = new WeatherPublisherChorusHandler(control);
         ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
         exporter.export();

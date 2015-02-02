@@ -28,7 +28,9 @@ public class WeatherPublisherUI extends Application implements WeatherPublisherC
 
     public void init() throws Exception {
         publisher = new WeatherPublisher();
-        WeatherPublisherChorusHandler.exportChorusHandler(this);
+        new Thread(() -> {
+            WeatherPublisherChorusHandler.exportChorusHandler(this);
+        }).start();
     }
 
     @Override
