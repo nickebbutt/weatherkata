@@ -57,7 +57,9 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     public void init() throws Exception {
         weatherSubscriber = new WeatherSubscriber(this);
         weatherSubscriber.subscribe();
-        WeatherSubscriberChorusHandler.exportChorusHandler(this);
+        new Thread(() -> {
+            WeatherSubscriberChorusHandler.exportChorusHandler(this);
+        }).start();
     }
 
     @Override

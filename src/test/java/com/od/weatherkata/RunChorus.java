@@ -10,6 +10,6 @@ import org.junit.runner.RunWith;
 public class RunChorus {
 
     public static String getChorusArgs() {
-        return "-f src/test/java -h com.od.weatherkata";
+        return "-f src/test/java -h com.od.weatherkata -l info";
     }
 }

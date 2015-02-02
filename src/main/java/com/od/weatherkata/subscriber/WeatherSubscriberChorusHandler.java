@@ -1,6 +1,5 @@
 package com.od.weatherkata.subscriber;
 
-import com.od.weatherkata.util.Jmx;
 import org.chorusbdd.chorus.annotations.Handler;
 import org.chorusbdd.chorus.annotations.PassesWithin;
 import org.chorusbdd.chorus.annotations.Step;
@@ -11,7 +10,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Created by Nick E on 29/01/2015.
@@ -85,7 +83,6 @@ public class WeatherSubscriberChorusHandler {
     }
 
     public static void exportChorusHandler(WeatherSubscriberControl uiControl) {
-        Jmx.startJmx(50124);
         WeatherSubscriberChorusHandler handler = new WeatherSubscriberChorusHandler(uiControl);
         ChorusHandlerJmxExporter exporter = new ChorusHandlerJmxExporter(handler);
         exporter.export();
