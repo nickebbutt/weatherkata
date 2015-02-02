@@ -9,6 +9,8 @@
     Feature-Start:
 
 
+    ### Show the temperature wind and precipitation values on the UI
+
     Scenario: The temperature wind and precipitation are set
       Given I set temp, wind and precipitation to 10, 5, Rain
       Then the temperature is 10
