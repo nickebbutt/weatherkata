@@ -1,5 +1,6 @@
   Uses: Remoting
   Uses: Processes
+  Uses: Timers
 
   Feature: I can travel by snowmobile
 
