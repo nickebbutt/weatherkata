@@ -1,11 +1,13 @@
 package com.od.weatherkata.subscriber;
 
 import rx.Observable;
+import rx.functions.Func1;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
- * Created by Nick E on 27/01/2015.
+ * Created by GA2EBBU on 27/01/2015.
  */
 public class WeatherSubscriber {
 
@@ -18,50 +20,76 @@ public class WeatherSubscriber {
     private Observable<Integer> pressureHigh = socketSubscriber.getHighPressureObservable();
     private Observable<Map<String,Integer>> pressureDeltas = socketSubscriber.getPressureDeltasObservable();
 
-    private WeatherSubscriberControl uiControl;
 
     public WeatherSubscriber(WeatherSubscriberControl uiControl) {
-        this.uiControl = uiControl;
-        connectStatusPanel();
-        connectSnowMobile();
-        connectBalloon();
-        connectTrain();
-        connectPressure();
-        connectPressureDifference();
+        connectStatusPanel(uiControl);
+        connectSnowMobile(uiControl);
+        connectBalloon(uiControl);
+        connectTrain(uiControl);
+        connectPressure(uiControl);
+        connectPressureDifference(uiControl);
     }
 
-    private void connectStatusPanel() {
-        //TODO - provide code to set the temperature, precipitation and wind strength
-        //TODO - suppress sending any duplicate values which are unchanged
-        //temperature.subscribe(System.out::println);
-
-        uiControl.setTemperature(0);
-        uiControl.setPrecipitation("Unknown");
-        uiControl.setWindStrength(0);
+    private void connectStatusPanel(WeatherSubscriberControl uiControl) {
+        temperature.distinctUntilChanged().subscribe(uiControl::setTemperature);
+        windStrength.distinctUntilChanged().subscribe(uiControl::setWindStrength);
+        precipitation.distinctUntilChanged().subscribe(uiControl::setPrecipitation);
     }
 
-    private void connectSnowMobile() {
-        //TODO - provide code to enable the snow mobile if the temperature is < 0
+    private void connectSnowMobile(WeatherSubscriberControl uiControl) {
+        temperature.map(i -> i <= 0).distinctUntilChanged().subscribe(uiControl::setSnowMobileEnabled);
     }
 
-    private void connectBalloon() {
-        //TODO - provide code to enable the balloon if the wind is < 5 and the precipitation != Fish
+    private void connectBalloon(WeatherSubscriberControl uiControl) {
+        Observable<Boolean> isFish = precipitation.map("Fish"::equals);
+        Observable<Boolean> shouldFly = Observable.combineLatest(isFish, windStrength, (f, w) -> w < 5 && ! f);
+        shouldFly.distinctUntilChanged().subscribe(uiControl::setBalloonEnabled);
     }
 
-    private void connectTrain() {
-        //TODO - provide code to enable the Thameslink train if the wind is 0, temp = 18 and the precipitation == Fish
+    private void connectTrain(WeatherSubscriberControl uiControl) {
+        Observable<Boolean> isFish = precipitation.map("Fish"::equals);
+        Observable<Boolean> is18 = temperature.map(Integer.valueOf(18)::equals);
+        Observable<Boolean> isNoWind = windStrength.map(Integer.valueOf(0)::equals);
+        Observable<Boolean> canCommute = Observable.combineLatest(isFish, isNoWind, is18, (f, w, t) -> f && w && t);
+        canCommute.distinctUntilChanged().subscribe(uiControl::setTrainEnabled);
     }
 
-    private void connectPressure() {
-        //TODO - provide code to set the low pressure and high pressure
+    private void connectPressure(WeatherSubscriberControl uiControl) {
+        pressureLow.subscribe(uiControl::setLowPressure);
+        pressureHigh.subscribe(uiControl::setHighPressure);
     }
 
-    private void connectPressureDifference() {
-        //TODO - provide code to set the difference in pressure
+    private void connectPressureDifference(WeatherSubscriberControl uiControl) {
+        pressureDeltas.map(getPressureChangeFunction()).subscribe(o -> {
+            o.ifPresent(uiControl::setPressureDifference);
+        });
+    }
+
+    private Func1<Map<String,Integer>, Optional<Integer>> getPressureChangeFunction() {
+        return new Func1<Map<String,Integer>, Optional<Integer>>() {
+            int low = -1;
+            int high = -1;
+
+            @Override
+            public Optional<Integer> call(Map<String, Integer> m) {
+                if (m.containsKey("lowPressure")) {
+                    low = m.get("lowPressure");
+                }
+
+                if (m.containsKey("highPressure")) {
+                    high = m.get("highPressure");
+                }
+
+                return low != -1 && high != -1 ?
+                        Optional.of(high - low) :
+                        Optional.empty();
+            }
+        };
     }
 
     public void subscribe() {
         socketSubscriber.subscribe();
     }
+
 
 }
