@@ -5,7 +5,7 @@
   Feature: I can travel by snowmobile
 
     #! Processes start pub, sub
-    #! Remoting use pub, sub
+    #! Processes connect pub, sub
     Feature-Start:
 
 
