@@ -1,21 +1,17 @@
-
-### Weather Kata ###
+### Weather Kata
 
 This exercise can be used to demonstrate techniques in Functional Reactive Programming  
-It follows on from the 'streamkata' which demonstrates functional programming using jdk 1.8 streams
-
 There are two simple User Interfaces provided - a weather publisher, and a weather subscriber
 
-### Your Mission ###
+#### Your Mission
 
 The existing code provides observable streams of events (as RXJava Observable) within the subscriber  
-These cover attributes such as temperature, wind strength. 
-
-Your job is to hook up these event streams to drive various aspects of the subscriber UI  
-There are various forms of transport pictured and your job is to enable them when weather conditions are suitable
+These events relate to changes in weather conditions such as temperature, wind strength. 
 
 ![ScreenShot](/src/main/resources/weatherKataScreenshot.png?raw=true "ScreenShot")
 
+Your job is to hook up these event streams to drive various aspects of the subscriber UI  
+There are various forms of transport pictured and your job is to enable them when weather conditions are suitable
 
 You should only need to modify the class **com.od.weatherkata.subscriber.WeatherSubscriber**
 
