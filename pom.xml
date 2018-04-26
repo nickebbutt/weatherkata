@@ -66,7 +66,7 @@
 	<dependency>
 		<groupId>org.chorusbdd</groupId>
 		<artifactId>chorus</artifactId>
-		<version>2.0.0.rc2</version>
+		<version>3.0.0</version>
 	</dependency>
 
     <!-- Test dependencies -->

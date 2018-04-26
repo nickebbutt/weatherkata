@@ -9,7 +9,13 @@ import org.junit.runner.RunWith;
 @RunWith(ChorusSuite.class)
 public class RunChorus {
 
+    /**
+     * Command line arguments for Chorus interpreter
+     * See www.chorus-bdd.org for docs
+     * 
+     * Use -l debug or -l info to turn on extra logging
+     */
     public static String getChorusArgs() {
-        return "-f src/test/java -h com.od.weatherkata -l info";
+        return "-f src/test/java -h com.od.weatherkata -l warn";
     }
 }

@@ -1,7 +1,6 @@
 package com.od.weatherkata.subscriber;
 
 import org.chorusbdd.chorus.annotations.Handler;
-import org.chorusbdd.chorus.annotations.PassesWithin;
 import org.chorusbdd.chorus.annotations.Step;
 import org.chorusbdd.chorus.context.ChorusContext;
 import org.chorusbdd.chorus.remoting.jmx.ChorusHandlerJmxExporter;
@@ -23,26 +22,22 @@ public class WeatherSubscriberChorusHandler {
         this.uiControl = uiControl;
     }
 
-    @PassesWithin(length=3)
-    @Step("the temperature is (\\d+)")
+    @Step(value = "the temperature is (\\d+)", retryDuration = 3)
     public void checkTemp(int temp) {
         assertEquals(temp, uiControl.getTemperature());
     }
 
-    @PassesWithin(length=3)
-    @Step("the wind strength is (\\d+)")
+    @Step(value ="the wind strength is (\\d+)", retryDuration = 3)
     public void checkWind(int wind) {
         assertEquals(wind, uiControl.getWindStrength());
     }
 
-    @PassesWithin(length=3)
-    @Step("the precipitation is (\\w+)")
+    @Step(value = "the precipitation is (\\w+)", retryDuration = 3)
     public void checkPrecipitation(String precip) {
         assertEquals(precip, uiControl.getPrecipitation());
     }
 
-    @Step("I (can|can't) travel by (train|balloon|snowmobile)")
-    @PassesWithin(length=3)
+    @Step(value = "I (can|can't) travel by (train|balloon|snowmobile)", retryDuration = 3)
     public void checkCanTravel(String canOrCant, String transport) {
         uiControl.showWeatherTab();
         checkExpectedValuesSet();
@@ -51,16 +46,14 @@ public class WeatherSubscriberChorusHandler {
         assertEquals(expected, checker.get());
     }
 
-    @Step("the pressure difference is (\\d+)")
-    @PassesWithin(length=3)
+    @Step(value ="the pressure difference is (\\d+)", retryDuration = 3)
     public void checkPressure(int pressureDiff) {
         uiControl.showPressureTab();
         checkExpectedValuesSet();
         assertEquals(pressureDiff, uiControl.getPressureDifference());
     }
 
-    @Step("the last pressure difference is (\\d+)")
-    @PassesWithin(length=3)
+    @Step(value= "the last pressure difference is (\\d+)", retryDuration = 3)
     public void checkLastPressure(int lastPressureDiff) {
         uiControl.showPressureTab();
         checkExpectedValuesSet();
