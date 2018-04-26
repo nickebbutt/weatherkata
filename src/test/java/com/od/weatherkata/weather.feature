@@ -2,11 +2,15 @@
   Uses: Processes
   Uses: Timers
 
-  Feature: I can travel by snowmobile
-
-    #! Processes start pub, sub
-    #! Processes connect pub, sub
+  Feature: Transport is responsive to weather
+    
+    This feature check that the available transportation methods are weather-appropriate
+     
+    # This section starts up the publisher and subscriber processes and connects to them so we can use the steps they publish
     Feature-Start:
+      First I start a pub process
+      And I start a sub process
+      And I connect to the processes pub, sub
 
 
     ### Show the temperature wind and precipitation values on the UI
