@@ -262,7 +262,7 @@ public class WeatherSubscriberUI extends Application implements WeatherSubscribe
     @Override
     public void setTemperature(int temperature) {
         Platform.runLater(() -> {
-            tempLabel.setText(temperature + "%");
+            tempLabel.setText(temperature + "°");
             blink(tempLabel, 200);
             tempVal = temperature;
         });
